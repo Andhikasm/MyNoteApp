@@ -46,11 +46,13 @@ public class DisplayNotesActivity extends AppCompatActivity {
             String title = notesFromDB.get(i).getTitle();
             String dateText = notesFromDB.get(i).getRecordDate();
             String content = notesFromDB.get(i).getContent();
+            int mid = notesFromDB.get(i).getItemId();
 
             MyNote note = new MyNote();
             note.setTitle(title);
             note.setContent(content);
             note.setRecordDate(dateText);
+            note.setItemId(mid);
 
             dbNotes.add(note);
         }
@@ -128,17 +130,20 @@ public class DisplayNotesActivity extends AppCompatActivity {
             holder.mDate.setText(holder.mNote.getRecordDate());
 
             final ViewHolder finalHolder = holder;
-            holder.mTitle.setOnClickListener(new View.OnClickListener() {
+            row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String text = finalHolder.mNote.getContent().toString();
                     String dateText = finalHolder.mNote.getRecordDate().toString();
                     String title = finalHolder.mNote.getTitle().toString();
 
+                    int mId = finalHolder.mNote.getItemId();
+
                     Intent intent = new Intent(DisplayNotesActivity.this, NoteDetailActivity.class);
                     intent.putExtra("content", text);
                     intent.putExtra("date", dateText);
                     intent.putExtra("title", title);
+                    intent.putExtra("id", mId);
                     startActivity(intent);
                 }
             });
