@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.sql.Date;
 import java.text.DateFormat;
@@ -29,6 +30,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                                     Constants.TITLE_NAME + " TEXT, " + Constants.CONTENT_NAME +
                                     " TEXT, " + Constants.DATE_NAME + " LONG);";
 
+        db.execSQL(CREATE_NOTES_TABLE);
+
     }
 
     @Override
@@ -51,6 +54,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(Constants.DATE_NAME, System.currentTimeMillis());
 
         db.insert(Constants.TABLE_NAME, null, values);
+
+        Log.v("NOTES SAVED", "YEAH");
         db.close();
     }
 
@@ -66,10 +71,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         //loop through the cursor
         if(cursor.moveToFirst()){
             //Todo: Try to change while loop is there's error
-            while(!cursor.isLast()){
+            do{
+
                 MyNote note = new MyNote();
-                String titleCol = cursor.getColumnName(cursor.getColumnIndex(Constants.TITLE_NAME));
-                String contentCol = cursor.getColumnName(cursor.getColumnIndex(Constants.CONTENT_NAME));
+                String titleCol = cursor.getString(cursor.getColumnIndex(Constants.TITLE_NAME));
+                String contentCol = cursor.getString(cursor.getColumnIndex(Constants.CONTENT_NAME));
                 DateFormat dateFormat = DateFormat.getDateInstance();
                 String date = dateFormat.format(new Date(cursor.getLong(cursor.getColumnIndex(Constants.DATE_NAME))).getTime());
 
@@ -77,8 +83,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 note.setContent(contentCol);
                 note.setRecordDate(date);
                 noteList.add(note);
-                cursor.moveToNext();
+
             }
+            while(cursor.moveToNext());
 
         }
 
