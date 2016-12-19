@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.sql.Date;
 import java.text.DateFormat;
@@ -29,6 +30,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                                     Constants.TITLE_NAME + " TEXT, " + Constants.CONTENT_NAME +
                                     " TEXT, " + Constants.DATE_NAME + " LONG);";
 
+        db.execSQL(CREATE_NOTES_TABLE);
+
     }
 
     @Override
@@ -51,6 +54,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(Constants.DATE_NAME, System.currentTimeMillis());
 
         db.insert(Constants.TABLE_NAME, null, values);
+
+        Log.v("NOTES SAVED", "YEAH");
         db.close();
     }
 
@@ -67,14 +72,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if(cursor.moveToFirst()){
             //Todo: Try to change while loop is there's error
             while(!cursor.isLast()){
+
                 MyNote note = new MyNote();
-                String titleCol = cursor.getColumnName(cursor.getColumnIndex(Constants.TITLE_NAME));
-                String contentCol = cursor.getColumnName(cursor.getColumnIndex(Constants.CONTENT_NAME));
+                String titleCol = cursor.getString(cursor.getColumnIndex(Constants.TITLE_NAME));
+                String contentCol = cursor.getString(cursor.getColumnIndex(Constants.CONTENT_NAME));
+                int itemId = cursor.getInt(cursor.getColumnIndex(Constants.KEY_ID));
                 DateFormat dateFormat = DateFormat.getDateInstance();
                 String date = dateFormat.format(new Date(cursor.getLong(cursor.getColumnIndex(Constants.DATE_NAME))).getTime());
 
                 note.setTitle(titleCol);
                 note.setContent(contentCol);
+                note.setItemId(itemId);
                 note.setRecordDate(date);
                 noteList.add(note);
                 cursor.moveToNext();
@@ -83,5 +91,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
 
         return noteList;
+    }
+
+    public void deleteNote(int id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(Constants.TABLE_NAME, Constants.KEY_ID + " = ? ", new String[]{String.valueOf(id)});
+        db.close();
     }
 }
