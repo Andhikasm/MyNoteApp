@@ -3,7 +3,6 @@ package data;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -19,16 +18,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private final ArrayList<MyNote> noteList = new ArrayList<>();
 
     public DatabaseHandler(Context context) {
-        super(context, Constants.DATABASE_NAME, null, Constants.DATABASE_VERSION);
+        super(context, MyNote.DATABASE_NAME, null, MyNote.DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        String CREATE_NOTES_TABLE = "CREATE TABLE " + Constants.TABLE_NAME +
-                                    "(" + Constants.KEY_ID + " INTEGER PRIMARY KEY," +
-                                    Constants.TITLE_NAME + " TEXT, " + Constants.CONTENT_NAME +
-                                    " TEXT, " + Constants.DATE_NAME + " LONG);";
+        String CREATE_NOTES_TABLE = "CREATE TABLE " + MyNote.TABLE_NAME +
+                                    "(" + MyNote.KEY_ID + " INTEGER PRIMARY KEY," +
+                                    MyNote.TITLE_NAME + " TEXT, " + MyNote.CONTENT_NAME +
+                                    " TEXT, " + MyNote.DATE_NAME + " LONG);";
 
         db.execSQL(CREATE_NOTES_TABLE);
 
@@ -37,7 +36,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        db.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + MyNote.TABLE_NAME);
 
         onCreate(db);
 
@@ -49,24 +48,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         //Similar to hashmap
         ContentValues values = new ContentValues();
-        values.put(Constants.TITLE_NAME, note.getTitle());
-        values.put(Constants.CONTENT_NAME, note.getContent());
-        values.put(Constants.DATE_NAME, System.currentTimeMillis());
+        values.put(MyNote.TITLE_NAME, note.getTitle());
+        values.put(MyNote.CONTENT_NAME, note.getContent());
+        values.put(MyNote.DATE_NAME, System.currentTimeMillis());
 
-        db.insert(Constants.TABLE_NAME, null, values);
+        db.insert(MyNote.TABLE_NAME, null, values);
 
-        Log.v("NOTES SAVED", "YEAH");
+        //Log.v("NOTES SAVED", "YEAH");
         db.close();
     }
 
     public ArrayList<MyNote> getNotes(){
-        String selectQuery = "SELECT * FROM " + Constants.TABLE_NAME;
+        //String selectQuery = "SELECT * FROM " + MyNote.TABLE_NAME;
         SQLiteDatabase db = this.getReadableDatabase();
 
         //Similar to cursor in a cell of a table
-        Cursor cursor = db.query(Constants.TABLE_NAME, new String[]{Constants.KEY_ID,
-                                Constants.TITLE_NAME, Constants.CONTENT_NAME, Constants.DATE_NAME},
-                                null, null, null, null, Constants.DATE_NAME + " DESC");
+        Cursor cursor = db.query(MyNote.TABLE_NAME, new String[]{MyNote.KEY_ID,
+                                MyNote.TITLE_NAME, MyNote.CONTENT_NAME, MyNote.DATE_NAME},
+                                null, null, null, null, MyNote.DATE_NAME + " DESC");
 
         //loop through the cursor
         if(cursor.moveToFirst()){
@@ -74,11 +73,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             while(!cursor.isLast()){
 
                 MyNote note = new MyNote();
-                String titleCol = cursor.getString(cursor.getColumnIndex(Constants.TITLE_NAME));
-                String contentCol = cursor.getString(cursor.getColumnIndex(Constants.CONTENT_NAME));
-                int itemId = cursor.getInt(cursor.getColumnIndex(Constants.KEY_ID));
+                String titleCol = cursor.getString(cursor.getColumnIndex(MyNote.TITLE_NAME));
+                String contentCol = cursor.getString(cursor.getColumnIndex(MyNote.CONTENT_NAME));
+                int itemId = cursor.getInt(cursor.getColumnIndex(MyNote.KEY_ID));
                 DateFormat dateFormat = DateFormat.getDateInstance();
-                String date = dateFormat.format(new Date(cursor.getLong(cursor.getColumnIndex(Constants.DATE_NAME))).getTime());
+                String date = dateFormat.format(new Date(cursor.getLong(cursor.getColumnIndex(MyNote.DATE_NAME))).getTime());
 
                 note.setTitle(titleCol);
                 note.setContent(contentCol);
@@ -89,13 +88,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             }
 
         }
+        db.close();
 
         return noteList;
     }
 
     public void deleteNote(int id){
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(Constants.TABLE_NAME, Constants.KEY_ID + " = ? ", new String[]{String.valueOf(id)});
+        db.delete(MyNote.TABLE_NAME, MyNote.KEY_ID + " = " + String.valueOf(id), null);
         db.close();
     }
 }

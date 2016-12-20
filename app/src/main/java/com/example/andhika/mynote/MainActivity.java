@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         title.setText("");
         content.setText("");
 
-        Intent intent = new Intent(MainActivity.this, DisplayNotesActivity.class);
+        Intent intent = new Intent(MainActivity.this, NotesListActivity.class);
         startActivity(intent);
     }
 }

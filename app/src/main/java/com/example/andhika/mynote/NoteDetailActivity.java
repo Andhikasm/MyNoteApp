@@ -43,7 +43,7 @@ public class NoteDetailActivity extends AppCompatActivity {
                         startActivity(new Intent(NoteDetailActivity.this, MainActivity.class));
                     }
                     else{
-                        startActivity(new Intent(NoteDetailActivity.this, DisplayNotesActivity.class));
+                        startActivity(new Intent(NoteDetailActivity.this, NotesListActivity.class));
                     }
 
                 }

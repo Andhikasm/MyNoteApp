@@ -1,7 +1,6 @@
 package com.example.andhika.mynote;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,7 +18,7 @@ import java.util.ArrayList;
 import data.DatabaseHandler;
 import model.MyNote;
 
-public class DisplayNotesActivity extends AppCompatActivity {
+public class NotesListActivity extends AppCompatActivity {
 
     private DatabaseHandler dba;
     private ArrayList<MyNote> dbNotes = new ArrayList<>();
@@ -59,7 +58,7 @@ public class DisplayNotesActivity extends AppCompatActivity {
         dba.close();
 
         //setup adapter
-        noteAdapter = new NoteAdapter(DisplayNotesActivity.this, R.layout.note_row, dbNotes);
+        noteAdapter = new NoteAdapter(NotesListActivity.this, R.layout.note_row, dbNotes);
         listView.setAdapter(noteAdapter);
         noteAdapter.notifyDataSetChanged();
     }
@@ -139,7 +138,7 @@ public class DisplayNotesActivity extends AppCompatActivity {
 
                     int mId = finalHolder.mNote.getItemId();
 
-                    Intent intent = new Intent(DisplayNotesActivity.this, NoteDetailActivity.class);
+                    Intent intent = new Intent(NotesListActivity.this, NoteDetailActivity.class);
                     intent.putExtra("content", text);
                     intent.putExtra("date", dateText);
                     intent.putExtra("title", title);
