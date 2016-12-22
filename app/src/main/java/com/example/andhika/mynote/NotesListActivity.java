@@ -1,7 +1,6 @@
 package com.example.andhika.mynote;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,7 +18,7 @@ import java.util.ArrayList;
 import data.DatabaseHandler;
 import model.MyNote;
 
-public class DisplayNotesActivity extends AppCompatActivity {
+public class NotesListActivity extends AppCompatActivity {
 
     private DatabaseHandler dba;
     private ArrayList<MyNote> dbNotes = new ArrayList<>();
@@ -40,26 +39,11 @@ public class DisplayNotesActivity extends AppCompatActivity {
 
         dbNotes.clear();
         dba = new DatabaseHandler(getApplicationContext());
-        ArrayList<MyNote> notesFromDB = dba.getNotes();
-
-        for(int i = 0; i < notesFromDB.size(); ++i){
-            String title = notesFromDB.get(i).getTitle();
-            String dateText = notesFromDB.get(i).getRecordDate();
-            String content = notesFromDB.get(i).getContent();
-            int mid = notesFromDB.get(i).getItemId();
-
-            MyNote note = new MyNote();
-            note.setTitle(title);
-            note.setContent(content);
-            note.setRecordDate(dateText);
-            note.setItemId(mid);
-
-            dbNotes.add(note);
-        }
+        dbNotes = new ArrayList<>(dba.getNotes());
         dba.close();
 
         //setup adapter
-        noteAdapter = new NoteAdapter(DisplayNotesActivity.this, R.layout.note_row, dbNotes);
+        noteAdapter = new NoteAdapter(NotesListActivity.this, R.layout.note_row, dbNotes);
         listView.setAdapter(noteAdapter);
         noteAdapter.notifyDataSetChanged();
     }
@@ -139,7 +123,7 @@ public class DisplayNotesActivity extends AppCompatActivity {
 
                     int mId = finalHolder.mNote.getItemId();
 
-                    Intent intent = new Intent(DisplayNotesActivity.this, NoteDetailActivity.class);
+                    Intent intent = new Intent(NotesListActivity.this, NoteDetailActivity.class);
                     intent.putExtra("content", text);
                     intent.putExtra("date", dateText);
                     intent.putExtra("title", title);
@@ -155,8 +139,6 @@ public class DisplayNotesActivity extends AppCompatActivity {
     private class ViewHolder{
         MyNote mNote;
         TextView mTitle;
-        TextView mId;
-        TextView mContent;
         TextView mDate;
     }
 }
