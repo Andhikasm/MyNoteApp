@@ -39,22 +39,7 @@ public class NotesListActivity extends AppCompatActivity {
 
         dbNotes.clear();
         dba = new DatabaseHandler(getApplicationContext());
-        ArrayList<MyNote> notesFromDB = dba.getNotes();
-
-        for(int i = 0; i < notesFromDB.size(); ++i){
-            String title = notesFromDB.get(i).getTitle();
-            String dateText = notesFromDB.get(i).getRecordDate();
-            String content = notesFromDB.get(i).getContent();
-            int mid = notesFromDB.get(i).getItemId();
-
-            MyNote note = new MyNote();
-            note.setTitle(title);
-            note.setContent(content);
-            note.setRecordDate(dateText);
-            note.setItemId(mid);
-
-            dbNotes.add(note);
-        }
+        dbNotes = new ArrayList<>(dba.getNotes());
         dba.close();
 
         //setup adapter
@@ -154,8 +139,6 @@ public class NotesListActivity extends AppCompatActivity {
     private class ViewHolder{
         MyNote mNote;
         TextView mTitle;
-        TextView mId;
-        TextView mContent;
         TextView mDate;
     }
 }

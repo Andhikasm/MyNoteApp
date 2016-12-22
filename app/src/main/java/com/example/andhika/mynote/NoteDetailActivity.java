@@ -25,6 +25,7 @@ public class NoteDetailActivity extends AppCompatActivity {
         content = (TextView) findViewById(R.id.detailsTextView);
         deleteButton = (Button) findViewById(R.id.deleteButton);
 
+
         Bundle bundle = getIntent().getExtras();
         if(bundle != null){
             title.setText(bundle.getString("title"));
