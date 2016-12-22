@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText title;
     private EditText content;
     private Button saveButton;
+    private Button noteListButton;
     private DatabaseHandler dba;
 
     @Override
@@ -28,11 +29,17 @@ public class MainActivity extends AppCompatActivity {
         title = (EditText) findViewById(R.id.titleEditText);
         content = (EditText) findViewById(R.id.noteEditText);
         saveButton = (Button) findViewById(R.id.saveButton);
-
+        this.noteListButton = (Button) findViewById(R.id.noteListButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveToDB();
+            }
+        });
+        noteListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewDB();
             }
         });
 
@@ -48,7 +55,9 @@ public class MainActivity extends AppCompatActivity {
 
         title.setText("");
         content.setText("");
+    }
 
+    private void viewDB(){
         Intent intent = new Intent(MainActivity.this, NotesListActivity.class);
         startActivity(intent);
     }
