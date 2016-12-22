@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -12,7 +13,8 @@ import data.DatabaseHandler;
 
 public class NoteDetailActivity extends AppCompatActivity {
 
-    private TextView title, date, content;
+    private EditText title, content;
+    private TextView date;
     private Button deleteButton;
 
     @Override
@@ -20,11 +22,25 @@ public class NoteDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_detail);
 
-        title = (TextView) findViewById(R.id.detailsTitle);
+        title = (EditText) findViewById(R.id.detailsTitle);
         date = (TextView) findViewById(R.id.detailsDateText);
-        content = (TextView) findViewById(R.id.detailsTextView);
+        content = (EditText) findViewById(R.id.detailsContent);
         deleteButton = (Button) findViewById(R.id.deleteButton);
 
+
+        title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                title.setCursorVisible(true);
+            }
+        });
+
+        content.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                content.setCursorVisible(true);
+            }
+        });
 
         Bundle bundle = getIntent().getExtras();
         if(bundle != null){
