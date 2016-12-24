@@ -26,6 +26,12 @@ public class NotesListActivity extends AppCompatActivity {
     private NoteAdapter noteAdapter;
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(this, MainActivity.class));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_notes);
